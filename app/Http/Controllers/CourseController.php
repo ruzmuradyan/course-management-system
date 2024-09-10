@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 class CourseController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
         $courses = Course::all();
         return view('course.index', compact('courses'));
     }
@@ -21,7 +22,8 @@ class CourseController extends Controller
         Course::create($request->all());
         return redirect()->route('course.index');
     }
-    public function show($id){
+    public function show($id)
+    {
         $course = Course::findOrFail($id);
         return view('course.show', compact('course'));
     }
@@ -40,7 +42,8 @@ class CourseController extends Controller
         return redirect()->route('course.index');
     }
     public function destroy($id){
-        Course::destroy($id);
+        //Course::destroy($id);
+        Course::findOrFail($id)->delete();
         return redirect()->route('course.index');
     }
 }
