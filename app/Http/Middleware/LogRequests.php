@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,7 +21,7 @@ class LogRequests
             'method'=>$request->method(),
             'request' => $request->all()
         ]);
-        //return $next($request);
+
         $response = $next($request);
 
         Log::info('Response', [

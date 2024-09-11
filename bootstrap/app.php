@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,5 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Exception $e, Request $request) {
+            $message = $e->getMessage() != '' ? $e->getMessage() : 'something went wrong';
+            $code = $e->getCode() != 0 ? $e->getCode() : 500;
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $message
+                ], $code);
+            }
+        });
     })->create();
