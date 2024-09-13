@@ -8,16 +8,12 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
      */
     public function up(): void
     {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('instructor');
-            $table->string('courseHead');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user'); // 'user' for regular users, 'admin' for administrators
+
         });
     }
 
@@ -26,7 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-
-        Schema::dropIfExists('courses');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
     }
 };

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Exception;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
+    use AuthorizesRequests;
     public function index(): AnonymousResourceCollection
     {
         try {
@@ -32,6 +34,8 @@ class CourseController extends Controller
 
     public function store(StoreCourseRequest $request): CourseResource|JsonResponse
     {
+        /** @var TYPE_NAME $this */
+        $this->authorize('create', Course::class);
         try {
             $course = Course::create($request->all());
             Log::info('Course created', ['course_id' => $course->id]);
@@ -57,6 +61,7 @@ class CourseController extends Controller
 
     public function update(StoreCourseRequest $request, $id): CourseResource | JsonResponse
     {
+        $this->authorize('update', Course::class);
         try {
             $course = Course::findOrFail($id);
             $course->update($request->all());
@@ -71,6 +76,7 @@ class CourseController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        $this->authorize('delete', Course::class);
         try {
             Course::findOrFail($id)->delete();
             Log::info('Course deleted', ['course_id' => $id]);
